@@ -1,5 +1,5 @@
 // TODO: import module bila dibutuhkan di sini
-
+const fs = require('fs')
 // ! JANGAN DIMODIFIKASI
 let file1 = "./data1.json";
 let file2 = "./data2.json";
@@ -18,7 +18,48 @@ let modifyFile3 = (val) => {
 
 // TODO: Kerjakan bacaData
 // gunakan variabel file1, file2, dan file3
-const bacaData = null;
+
+const bacaData = async(fnCallback) => {
+  let res = [];  
+  fs.readFile(file1, (err, data) => {
+    if (err) {
+      fnCallback(err)
+    }
+    const response = getProcess(data)
+    res.push(response)
+
+    fs.readFile(file2, (err, data) => {
+      if (err) {
+        fnCallback(err)
+      }
+      const response = getProcess(data)
+      res.push(response)
+
+      fs.readFile(file3, (err, data) => {
+        if (err) {
+          fnCallback(err)
+        }
+        const response = getProcess(data)
+        res.push(response)
+      
+        fnCallback(null, res)
+      })
+    })
+  })                  
+};
+
+function getProcess(res) {
+  const data = JSON.parse(res);
+  if (data.message !== undefined) {
+    const word = data.message.split(" ");
+    return word[1];
+  } else if (data[0].message != undefined){ 
+    const word = data[0].message.split(" ");
+    return word[1];
+  } else if (data[0].data.message != undefined){                      
+    const word = data[0].data.message.split(" "); 
+    return word[1];}
+}
 
 // ! JANGAN DIMODIFIKASI
 module.exports = {
